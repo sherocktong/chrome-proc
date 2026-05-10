@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, existsSync, realpathSync, rmSync } from "fs";
 import { join, resolve } from "path";
+import { getPlatform } from "../platform";
 
 export interface ProfileEntry {
   name: string;
@@ -13,10 +14,10 @@ export interface LocalState {
 
 export function getChromeDataDir(): string {
   const dir = process.env.CHROME_DATA_DIR;
-  if (!dir) {
-    throw new Error("CHROME_DATA_DIR environment variable is not set");
+  if (dir) {
+    return dir;
   }
-  return dir;
+  return getPlatform().getDefaultChromeDataDir();
 }
 
 export function getLocalStatePath(): string {

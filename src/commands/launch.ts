@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
 import { existsSync } from "fs";
-import { isChromeRunning } from "../utils/process";
+import { getPlatform } from "../platform";
+import { isChromeRunning, getChromePids } from "../utils/process";
 
 interface LaunchOptions {
   dir?: string;
@@ -10,7 +11,7 @@ interface LaunchOptions {
 }
 
 export function launchCommand(options: LaunchOptions): void {
-  const chromeBin = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+  const chromeBin = getPlatform().getChromeExecutablePath();
   const profile = options.profile ?? process.env.CHROME_PROFILE ?? "";
   const dataDir = options.dir ?? process.env.CHROME_DATA_DIR ?? "";
 
@@ -38,10 +39,9 @@ export function launchCommand(options: LaunchOptions): void {
   }
 
   if (isChromeRunning()) {
-    const { execSync } = require("child_process");
-    const existing = execSync('pgrep -x "Google Chrome" | tr "\\n" " " | sed "s/ $//"', { encoding: "utf-8" }).trim();
-    if (existing) {
-      console.error(`Warning: Chrome is already running (PIDs: ${existing})`);
+    const existing = getChromePids(true);
+    if (existing.length > 0) {
+      console.error(`Warning: Chrome is already running (PIDs: ${existing.join(" ")})`);
     }
   }
 

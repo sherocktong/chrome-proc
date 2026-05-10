@@ -1,34 +1,15 @@
-import { execSync } from "child_process";
+import { getPlatform } from "../platform";
 
 export function getChromePids(exact = false): number[] {
-  try {
-    const flag = exact ? "-x" : "-f";
-    const output = execSync(`pgrep ${flag} "Google Chrome"`, { encoding: "utf-8" });
-    return output
-      .trim()
-      .split("\n")
-      .filter((line) => line.trim() !== "")
-      .map((line) => parseInt(line.trim(), 10))
-      .filter((pid) => !isNaN(pid));
-  } catch {
-    return [];
-  }
+  return getPlatform().getProcessManager().getChromePids(exact);
 }
 
 export function getProcessArgs(pid: number): string {
-  try {
-    return execSync(`ps -p "${pid}" -o args=`, { encoding: "utf-8" }).trim();
-  } catch {
-    return "?";
-  }
+  return getPlatform().getProcessManager().getProcessArgs(pid);
 }
 
 export function getProcessName(pid: number): string {
-  try {
-    return execSync(`ps -p "${pid}" -o comm=`, { encoding: "utf-8" }).trim();
-  } catch {
-    return "?";
-  }
+  return getPlatform().getProcessManager().getProcessName(pid);
 }
 
 export function extractDebugPort(args: string): number | null {
@@ -37,14 +18,9 @@ export function extractDebugPort(args: string): number | null {
 }
 
 export function killPid(pid: number, signal: "TERM" | "KILL"): boolean {
-  try {
-    execSync(`/bin/kill -${signal} "${pid}"`, { stdio: "pipe" });
-    return true;
-  } catch {
-    return false;
-  }
+  return getPlatform().getProcessManager().killPid(pid, signal);
 }
 
 export function isChromeRunning(): boolean {
-  return getChromePids(true).length > 0;
+  return getPlatform().getProcessManager().isChromeRunning();
 }
