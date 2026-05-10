@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
+import { readFileSync } from "fs";
+import { join } from "path";
 import { listCommand } from "./commands/list";
 import { killCommand } from "./commands/kill";
 import { launchCommand } from "./commands/launch";
@@ -9,9 +11,12 @@ import { completionCommand } from "./commands/completion";
 
 const program = new Command();
 
+const pkg = JSON.parse(readFileSync(join(__dirname, "../package.json"), "utf-8"));
+
 program
   .name("chrome-proc")
-  .description("Manage Chrome browser processes, profiles, and CDP endpoints");
+  .description("Manage Chrome browser processes, profiles, and CDP endpoints")
+  .version(pkg.version, "-V, --version");
 
 program
   .command("list")
