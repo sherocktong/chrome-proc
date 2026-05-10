@@ -1,6 +1,6 @@
 {
   "name": "chrome-proc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Manage Chrome browser processes, profiles, and CDP endpoints",
   "main": "dist/index.js",
   "bin": {
@@ -10,7 +10,11 @@
     "build": "tsc",
     "dev": "tsc --watch"
   },
-  "keywords": ["chrome", "cdp", "devtools"],
+  "keywords": [
+    "chrome",
+    "cdp",
+    "devtools"
+  ],
   "license": "MIT",
   "dependencies": {
     "commander": "^12.0.0"
